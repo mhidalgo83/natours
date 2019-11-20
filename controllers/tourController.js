@@ -76,10 +76,16 @@ exports.updateTour = async (req, res) => {
 };
 
 exports.deleteTour = async (req, res) => {
+  await Tour.findByIdAndDelete(req.params.id);
   try {
     res.status(204).json({
       status: 'success',
       data: null
     });
-  } catch (err) {}
+  } catch (err) {
+    res.status(400).json({
+      status: 'fail',
+      message: err
+    });
+  }
 };
