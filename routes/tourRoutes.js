@@ -10,6 +10,8 @@ const router = express.Router();
 //If not, send back 400 (bad request)
 //Add it to the post handler stack
 
+router.route("/top-5-tours").get(tourController.aliasTopTours, tourController.getAllTours)
+
 router
   .route('/')
   .get(tourController.getAllTours)
