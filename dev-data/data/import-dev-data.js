@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const dotenv = require('dotenv');
 const fs = require('fs');
-const Tour = require('../../models/tourModel');
+const Tour = require('../../models/tourSchema');
 
 dotenv.config({ path: './config.env' });
 
@@ -14,9 +14,12 @@ mongoose
   .connect(DB, {
     useNewUrlParser: true,
     useCreateIndex: true,
-    useFindAndModify: false
+    useFindAndModify: false,
+    useUnifiedTopology: true,
   })
-  .then(() => console.log('DB connection successful!'));
+  .then(() => {
+    console.log('DB connection successful!!');
+  });
 
 //READ JSON FILE
 const tours = JSON.parse(
@@ -50,3 +53,5 @@ if (process.argv[2] === '--import') {
 } else if (process.argv[2] === '--delete') {
   deleteData();
 }
+
+console.log(process.argv);
