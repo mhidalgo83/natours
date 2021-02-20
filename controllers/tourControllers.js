@@ -9,13 +9,21 @@ exports.getAllTours = async (req, res) => {
   try {
     //BUILD QUERY
     // Copies query req.query to new object
+    console.log(req.query);
     const queryObj = { ...req.query };
     // List of excldued fields
     const excludedFields = ['page', 'sort', 'limit', 'fields'];
     // Loop through excluded fields, removing those fields from the query obj
     excludedFields.forEach((el) => delete queryObj[el]);
     // Fetch query results from db
-    const query = await Tour.find(queryObj);
+
+    // Advanced filtering
+    let queryStr = JSON.stringify(queryObj);
+    queryStr = queryStr.replace(/\b(gte|gt|lte|lt)\b/g, (match) => `$${match}`);
+
+    const query = await Tour.find(JSON.parse(queryStr));
+
+    // {difficulty: 'easy', duration: {$gte: 5}}
     // const tours = await Tour.find()
     //   .where('duration')
     //   .equals(5)
