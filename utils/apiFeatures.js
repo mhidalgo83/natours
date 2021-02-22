@@ -1,4 +1,4 @@
-module.exports = class APIFeatures {
+class APIFeatures {
   constructor(query, queryStr) {
     this.query = query;
     this.queryStr = queryStr;
@@ -21,7 +21,7 @@ module.exports = class APIFeatures {
   }
 
   sort() {
-    if (this.queryStr) {
+    if (this.queryStr.sort) {
       const sortBy = this.queryStr.sort.split(',').join(' ');
       this.query = this.query.sort(sortBy);
     } else {
@@ -49,4 +49,6 @@ module.exports = class APIFeatures {
 
     return this;
   }
-};
+}
+
+module.exports = APIFeatures;
