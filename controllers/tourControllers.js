@@ -1,6 +1,8 @@
+const mongoose = require('mongoose');
 const Tour = require('../models/tourSchema');
 const APIFeatures = require('../utils/apiFeatures');
 const catchAsync = require('../utils/catchAsync');
+const AppError = require('../utils/error');
 
 // Used to read tour file while in early development
 // const tours = JSON.parse(
@@ -77,6 +79,10 @@ exports.getAllTours = catchAsync(async (req, res, next) => {
 });
 
 exports.getTour = catchAsync(async (req, res, next) => {
+  if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
+    console.log('This works');
+    return next(new AppError('No tour found with that id', 404));
+  }
   const tour = await Tour.findById(req.params.id);
   res.status(200).json({
     status: 'success',
@@ -87,7 +93,7 @@ exports.getTour = catchAsync(async (req, res, next) => {
   });
 });
 
-exports.createTour = catchAsync(async (req, res, next) => {
+exports.createTour = catchAsync(async (req, res) => {
   const newTour = await Tour.create(req.body);
   res.status(201).json({
     status: 'success',
@@ -98,6 +104,10 @@ exports.createTour = catchAsync(async (req, res, next) => {
 });
 
 exports.updateTour = catchAsync(async (req, res, next) => {
+  if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
+    console.log('This works');
+    return next(new AppError('No tour found with that id', 404));
+  }
   const tour = await Tour.findByIdAndUpdate(req.params.id, req.body, {
     new: true,
     runValidators: true,
@@ -111,6 +121,10 @@ exports.updateTour = catchAsync(async (req, res, next) => {
 });
 
 exports.deleteTour = catchAsync(async (req, res, next) => {
+  if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
+    console.log('This works');
+    return next(new AppError('No tour found with that id', 404));
+  }
   await Tour.findByIdAndDelete(req.params.id);
   res.status(204).json({
     status: 'success',
@@ -118,7 +132,7 @@ exports.deleteTour = catchAsync(async (req, res, next) => {
   });
 });
 
-exports.getTourStats = catchAsync(async (req, res, next) => {
+exports.getTourStats = catchAsync(async (req, res) => {
   const stats = await Tour.aggregate([
     {
       $match: {
@@ -156,7 +170,7 @@ exports.getTourStats = catchAsync(async (req, res, next) => {
   });
 });
 
-exports.getMonthlyPlan = catchAsync(async (req, res, next) => {
+exports.getMonthlyPlan = catchAsync(async (req, res) => {
   const year = req.params.year * 1;
   const plan = await Tour.aggregate([
     {
