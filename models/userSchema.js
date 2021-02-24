@@ -4,10 +4,8 @@ const validator = require('validator');
 const userSchema = new mongoose.Schema({
   name: {
     type: String,
-    required: [true, 'Please tell ys your name.'],
+    required: [true, 'Please tell us your name.'],
     trim: true,
-    maxlength: [40, 'A user must have 40 characters or less.'],
-    minlength: [10, 'A user must have 10 characters or more.'],
   },
   email: {
     type: String,
