@@ -1,6 +1,7 @@
 const Tour = require('../models/tourSchema');
 const APIFeatures = require('../utils/apiFeatures');
 const catchAsync = require('../utils/catchAsync');
+const AppError = require('../utils/error');
 
 // Used to read tour file while in early development
 // const tours = JSON.parse(
@@ -78,6 +79,9 @@ exports.getAllTours = catchAsync(async (req, res, next) => {
 
 exports.getTour = catchAsync(async (req, res, next) => {
   const tour = await Tour.findById(req.params.id);
+  if (!tour) {
+    return next(new AppError('A tour with that id does not exist', 404));
+  }
   res.status(200).json({
     status: 'success',
     results: 1,
@@ -112,6 +116,9 @@ exports.updateTour = catchAsync(async (req, res, next) => {
 
 exports.deleteTour = catchAsync(async (req, res, next) => {
   const tour = await Tour.findByIdAndDelete(req.params.id);
+  if (!tour) {
+    return next(new AppError('A tour with that id does not exist', 404));
+  }
   res.status(204).json({
     status: 'success',
     data: null,
